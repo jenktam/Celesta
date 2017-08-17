@@ -7,18 +7,21 @@ import axios from 'axios'
 
 const logErr = console.error.bind(console)
 
+const initialAlbum = {
+  songs: []
+}
+
 export default class Main extends Component{
   constructor(props) {
     super(props)
 
     this.state = {
       albums: [],
-      selectedAlbum: {
-        songs: []
-      },
+      selectedAlbum: initialAlbum
     }
 
     this.selectAlbum = this.selectAlbum.bind(this)
+    this.resetSelectedAlbum = this.resetSelectedAlbum.bind(this)
   }
 
   componentDidMount() {
@@ -49,12 +52,16 @@ export default class Main extends Component{
     .catch(logErr)
   }
 
-
+  resetSelectedAlbum(){
+    this.setState({
+      selectedAlbum: initialAlbum
+    })
+  }
   render() {
 
     return (
       <div>
-        <Sidebar />
+        <Sidebar handleClick={ this.resetSelectedAlbum } />
         <div className="col-xs-10">
           {
             this.state.selectedAlbum.hasOwnProperty("id")
