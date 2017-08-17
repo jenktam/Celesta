@@ -39,8 +39,6 @@ export default class Main extends Component{
   }
 
   selectAlbum(album){
-    console.log("clicked select album:", album)
-
     axios.get(`api/albums/${album.id}`)
     .then(res => res.data)
     .then(backendAlbum => {
@@ -55,13 +53,16 @@ export default class Main extends Component{
   render() {
 
     return (
-      <div className="test">
+      <div>
         <Sidebar />
         <div className="col-xs-10">
-          <SingleAlbum album={this.state.selectedAlbum} />
-          <Albums
-            albums={this.state.albums}
-            handleClick={this.selectAlbum} />
+          {
+            this.state.selectedAlbum.hasOwnProperty("id")
+            ? <SingleAlbum album={this.state.selectedAlbum} />
+            : <Albums
+              albums={this.state.albums}
+              handleClick={this.selectAlbum} />
+          }
         <Footer />
         </div>
       </div>

@@ -10524,13 +10524,12 @@ var Main = function (_Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: 'test' },
+        null,
         _react2.default.createElement(_Sidebar2.default, null),
         _react2.default.createElement(
           'div',
           { className: 'col-xs-10' },
-          _react2.default.createElement(_SingleAlbum2.default, { album: this.state.selectedAlbum }),
-          _react2.default.createElement(_Albums2.default, {
+          this.state.selectedAlbum.hasOwnProperty("id") ? _react2.default.createElement(_SingleAlbum2.default, { album: this.state.selectedAlbum }) : _react2.default.createElement(_Albums2.default, {
             albums: this.state.albums,
             handleClick: this.selectAlbum }),
           _react2.default.createElement(_Footer2.default, null)
