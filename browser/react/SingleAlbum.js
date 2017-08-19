@@ -1,8 +1,6 @@
 import React from 'react'
 
-const SingleAlbum = ({ album, start }) => {
-  console.log("album", album)
-  console.log("start", start)
+const SingleAlbum = ({ album, start, pause, currentSong, isPlaying }) => {
 
   return (
     <div className="album">
@@ -21,20 +19,33 @@ const SingleAlbum = ({ album, start }) => {
         </thead>
         <tbody>
           { album.songs.map(song => (
-            <tr key={ song.id }>
-              <td>
-                <button
-                  className="btn btn-default btn-xs"
-                  onClick={() => start(song.audioUrl)}
-                >
-                  <span className="glyphicon glyphicon-play"></span>
+            <tr
+              key={ song.id }
+              className={ song.id === currentSong.id ? 'active' : '' }
+            >
+              <td onClick={
+                (isPlaying === true && song.id === currentSong.id)
+                ? () => pause()
+                : () => start(song.audioUrl, song)
+              }>
+                <button className="btn btn-default btn-xs">
+
+                  <span className={
+                    (isPlaying === true && song.id === currentSong.id)
+                    ? "glyphicon glyphicon-pause"
+                    : "glyphicon glyphicon-play"
+                  }>
+                  </span>
                 </button>
               </td>
               <td>{ song.name }</td>
-              <td>{ song.artists
-                ? song.artists.map( artist => artist.name).join(',')
-                : null
-                }</td>
+              <td>
+                {
+                  song.artists
+                  ? song.artists.map( artist => artist.name).join(',')
+                  : null
+                }
+              </td>
               <td>{ song.genre }</td>
             </tr>
             ))

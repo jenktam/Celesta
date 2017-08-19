@@ -18,12 +18,15 @@ export default class Main extends Component{
 
     this.state = {
       albums: [],
-      selectedAlbum: initialAlbum
+      selectedAlbum: initialAlbum,
+      currentSong: {},
+      isPlaying: false
     }
 
     this.selectAlbum = this.selectAlbum.bind(this)
     this.resetSelectedAlbum = this.resetSelectedAlbum.bind(this)
     this.start = this.start.bind(this)
+    this.pause = this.pause.bind(this)
   }
 
   componentDidMount() {
@@ -60,12 +63,21 @@ export default class Main extends Component{
     })
   }
 
-  start(audioUrl) {
-    console.log("should start song!")
-    // audio.src = 'https://learndotresources.s3.amazonaws.com/workshop/5616dbe5a561920300b10cd7/Dexter_Britain_-_03_-_The_Stars_Are_Out_Interlude.mp3';
+  start(audioUrl, song) {
     audio.src = audioUrl;
+    this.setState({
+      currentSong: song,
+      isPlaying: true
+    })
     audio.load();
     audio.play();
+  }
+
+  pause() {
+    this.setState({
+      isPlaying: false
+    })
+    audio.pause();
   }
 
   render() {
@@ -79,13 +91,19 @@ export default class Main extends Component{
             ? <SingleAlbum
                 album={this.state.selectedAlbum}
                 start={this.start}
+                pause={this.pause}
+                currentSong={this.state.currentSong}
+                isPlaying={this.state.isPlaying}
              />
             : <Albums
                 albums={this.state.albums}
                 handleClick={this.selectAlbum}
               />
           }
-        <Footer />
+        <Footer
+          currentSong={this.state.currentSong}
+          isPlaying={this.state.isPlaying}
+        />
         </div>
       </div>
     )

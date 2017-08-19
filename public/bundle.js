@@ -10480,12 +10480,15 @@ var Main = function (_Component) {
 
     _this.state = {
       albums: [],
-      selectedAlbum: initialAlbum
+      selectedAlbum: initialAlbum,
+      currentSong: {},
+      isPlaying: false
     };
 
     _this.selectAlbum = _this.selectAlbum.bind(_this);
     _this.resetSelectedAlbum = _this.resetSelectedAlbum.bind(_this);
     _this.start = _this.start.bind(_this);
+    _this.pause = _this.pause.bind(_this);
     return _this;
   }
 
@@ -10530,12 +10533,22 @@ var Main = function (_Component) {
     }
   }, {
     key: 'start',
-    value: function start(audioUrl) {
-      console.log("should start song!");
-      // audio.src = 'https://learndotresources.s3.amazonaws.com/workshop/5616dbe5a561920300b10cd7/Dexter_Britain_-_03_-_The_Stars_Are_Out_Interlude.mp3';
+    value: function start(audioUrl, song) {
       audio.src = audioUrl;
+      this.setState({
+        currentSong: song,
+        isPlaying: true
+      });
       audio.load();
       audio.play();
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.setState({
+        isPlaying: false
+      });
+      audio.pause();
     }
   }, {
     key: 'render',
@@ -10550,12 +10563,18 @@ var Main = function (_Component) {
           { className: 'col-xs-10' },
           this.state.selectedAlbum.hasOwnProperty("id") ? _react2.default.createElement(_SingleAlbum2.default, {
             album: this.state.selectedAlbum,
-            start: this.start
+            start: this.start,
+            pause: this.pause,
+            currentSong: this.state.currentSong,
+            isPlaying: this.state.isPlaying
           }) : _react2.default.createElement(_Albums2.default, {
             albums: this.state.albums,
             handleClick: this.selectAlbum
           }),
-          _react2.default.createElement(_Footer2.default, null)
+          _react2.default.createElement(_Footer2.default, {
+            currentSong: this.state.currentSong,
+            isPlaying: this.state.isPlaying
+          })
         )
       );
     }
@@ -11531,74 +11550,56 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Footer = function Footer(_ref, props) {
+  var currentSong = _ref.currentSong,
+      isPlaying = _ref.isPlaying;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  console.log("currentSong in footer", props);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Footer = function (_Component) {
-  _inherits(Footer, _Component);
-
-  function Footer() {
-    _classCallCheck(this, Footer);
-
-    return _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
-  }
-
-  _createClass(Footer, [{
-    key: "render",
-    value: function render() {
-
-      return _react2.default.createElement(
-        "div",
-        null,
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'footer',
+      { style: !currentSong.id ? { display: 'none' } : null
+      },
+      _react2.default.createElement(
+        'div',
+        { className: 'pull-left' },
         _react2.default.createElement(
-          "footer",
-          null,
-          _react2.default.createElement(
-            "div",
-            { className: "pull-left" },
-            _react2.default.createElement(
-              "button",
-              { className: "btn btn-default" },
-              _react2.default.createElement("span", { className: "glyphicon glyphicon-step-backward" })
-            ),
-            _react2.default.createElement(
-              "button",
-              { className: "btn btn-default" },
-              _react2.default.createElement("span", { className: "glyphicon glyphicon-play" })
-            ),
-            _react2.default.createElement(
-              "button",
-              { className: "btn btn-default" },
-              _react2.default.createElement("span", { className: "glyphicon glyphicon-step-forward" })
-            )
-          ),
-          _react2.default.createElement(
-            "div",
-            { className: "bar" },
-            _react2.default.createElement(
-              "div",
-              { className: "progress" },
-              _react2.default.createElement("div", { className: "progress-bar" })
-            )
-          )
+          'button',
+          { className: 'btn btn-default' },
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-backward' })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default' },
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-play' })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default' },
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-forward' })
         )
-      );
-    }
-  }]);
-
-  return Footer;
-}(_react.Component);
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'bar' },
+        _react2.default.createElement(
+          'div',
+          { className: 'progress' },
+          _react2.default.createElement('div', { className: 'progress-bar' })
+        )
+      )
+    )
+  );
+};
 
 exports.default = Footer;
 
@@ -11671,10 +11672,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var SingleAlbum = function SingleAlbum(_ref) {
   var album = _ref.album,
-      start = _ref.start;
+      start = _ref.start,
+      pause = _ref.pause,
+      currentSong = _ref.currentSong,
+      isPlaying = _ref.isPlaying;
 
-  console.log("album", album);
-  console.log("start", start);
 
   return _react2.default.createElement(
     "div",
@@ -11722,19 +11724,21 @@ var SingleAlbum = function SingleAlbum(_ref) {
         album.songs.map(function (song) {
           return _react2.default.createElement(
             "tr",
-            { key: song.id },
+            {
+              key: song.id,
+              className: song.id === currentSong.id ? 'active' : ''
+            },
             _react2.default.createElement(
               "td",
-              null,
+              { onClick: isPlaying === true && song.id === currentSong.id ? function () {
+                  return pause();
+                } : function () {
+                  return start(song.audioUrl, song);
+                } },
               _react2.default.createElement(
                 "button",
-                {
-                  className: "btn btn-default btn-xs",
-                  onClick: function onClick() {
-                    return start(song.audioUrl);
-                  }
-                },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-play" })
+                { className: "btn btn-default btn-xs" },
+                _react2.default.createElement("span", { className: isPlaying === true && song.id === currentSong.id ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play" })
               )
             ),
             _react2.default.createElement(
