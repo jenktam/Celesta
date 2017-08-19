@@ -1,6 +1,9 @@
 import React from 'react'
 
-const SingleAlbum = ({ album }) => {
+const SingleAlbum = ({ album, start }) => {
+  console.log("album", album)
+  console.log("start", start)
+
   return (
     <div className="album">
       <div>
@@ -20,7 +23,10 @@ const SingleAlbum = ({ album }) => {
           { album.songs.map(song => (
             <tr key={ song.id }>
               <td>
-                <button className="btn btn-default btn-xs">
+                <button
+                  className="btn btn-default btn-xs"
+                  onClick={() => start(song.audioUrl)}
+                >
                   <span className="glyphicon glyphicon-play"></span>
                 </button>
               </td>

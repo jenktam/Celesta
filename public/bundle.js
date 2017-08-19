@@ -10464,6 +10464,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var logErr = console.error.bind(console);
+var audio = document.createElement('audio');
 
 var initialAlbum = {
   songs: []
@@ -10484,6 +10485,7 @@ var Main = function (_Component) {
 
     _this.selectAlbum = _this.selectAlbum.bind(_this);
     _this.resetSelectedAlbum = _this.resetSelectedAlbum.bind(_this);
+    _this.start = _this.start.bind(_this);
     return _this;
   }
 
@@ -10527,6 +10529,15 @@ var Main = function (_Component) {
       });
     }
   }, {
+    key: 'start',
+    value: function start(audioUrl) {
+      console.log("should start song!");
+      // audio.src = 'https://learndotresources.s3.amazonaws.com/workshop/5616dbe5a561920300b10cd7/Dexter_Britain_-_03_-_The_Stars_Are_Out_Interlude.mp3';
+      audio.src = audioUrl;
+      audio.load();
+      audio.play();
+    }
+  }, {
     key: 'render',
     value: function render() {
 
@@ -10537,9 +10548,13 @@ var Main = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'col-xs-10' },
-          this.state.selectedAlbum.hasOwnProperty("id") ? _react2.default.createElement(_SingleAlbum2.default, { album: this.state.selectedAlbum }) : _react2.default.createElement(_Albums2.default, {
+          this.state.selectedAlbum.hasOwnProperty("id") ? _react2.default.createElement(_SingleAlbum2.default, {
+            album: this.state.selectedAlbum,
+            start: this.start
+          }) : _react2.default.createElement(_Albums2.default, {
             albums: this.state.albums,
-            handleClick: this.selectAlbum }),
+            handleClick: this.selectAlbum
+          }),
           _react2.default.createElement(_Footer2.default, null)
         )
       );
@@ -11623,7 +11638,7 @@ var Sidebar = function Sidebar(props) {
             { className: "menu-item active" },
             _react2.default.createElement(
               "a",
-              { href: "#", onClick: function onClick() {
+              { onClick: function onClick() {
                   return props.handleClick();
                 } },
               "ALBUMS"
@@ -11655,7 +11670,11 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var SingleAlbum = function SingleAlbum(_ref) {
-  var album = _ref.album;
+  var album = _ref.album,
+      start = _ref.start;
+
+  console.log("album", album);
+  console.log("start", start);
 
   return _react2.default.createElement(
     "div",
@@ -11709,7 +11728,12 @@ var SingleAlbum = function SingleAlbum(_ref) {
               null,
               _react2.default.createElement(
                 "button",
-                { className: "btn btn-default btn-xs" },
+                {
+                  className: "btn btn-default btn-xs",
+                  onClick: function onClick() {
+                    return start(song.audioUrl);
+                  }
+                },
                 _react2.default.createElement("span", { className: "glyphicon glyphicon-play" })
               )
             ),

@@ -58,6 +58,7 @@ router.get('/:songId/image', function (req, res, next) {
 
 router.get('/:songId/audio', function (req, res, next) {
   const url = urlParse(req.song.url)
+  console.log("audio url", url)
   url.protocol === 'file:'?
     res.sendFile(decodeURIComponent(url.path))
     : res.redirect(req.song.url)

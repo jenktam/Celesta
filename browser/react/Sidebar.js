@@ -8,7 +8,7 @@ const Sidebar = props => {
           <img src="celesta.png" className="logo" />
           <section>
             <h4 className="menu-item active">
-              <a href="#" onClick={() => props.handleClick()}>ALBUMS</a>
+              <a onClick={() => props.handleClick()}>ALBUMS</a>
             </h4>
           </section>
         </sidebar>

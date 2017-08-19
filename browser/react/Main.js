@@ -6,6 +6,7 @@ import SingleAlbum from './SingleAlbum'
 import axios from 'axios'
 
 const logErr = console.error.bind(console)
+const audio = document.createElement('audio');
 
 const initialAlbum = {
   songs: []
@@ -22,6 +23,7 @@ export default class Main extends Component{
 
     this.selectAlbum = this.selectAlbum.bind(this)
     this.resetSelectedAlbum = this.resetSelectedAlbum.bind(this)
+    this.start = this.start.bind(this)
   }
 
   componentDidMount() {
@@ -57,6 +59,15 @@ export default class Main extends Component{
       selectedAlbum: initialAlbum
     })
   }
+
+  start(audioUrl) {
+    console.log("should start song!")
+    // audio.src = 'https://learndotresources.s3.amazonaws.com/workshop/5616dbe5a561920300b10cd7/Dexter_Britain_-_03_-_The_Stars_Are_Out_Interlude.mp3';
+    audio.src = audioUrl;
+    audio.load();
+    audio.play();
+  }
+
   render() {
 
     return (
@@ -65,10 +76,14 @@ export default class Main extends Component{
         <div className="col-xs-10">
           {
             this.state.selectedAlbum.hasOwnProperty("id")
-            ? <SingleAlbum album={this.state.selectedAlbum} />
+            ? <SingleAlbum
+                album={this.state.selectedAlbum}
+                start={this.start}
+             />
             : <Albums
-              albums={this.state.albums}
-              handleClick={this.selectAlbum} />
+                albums={this.state.albums}
+                handleClick={this.selectAlbum}
+              />
           }
         <Footer />
         </div>

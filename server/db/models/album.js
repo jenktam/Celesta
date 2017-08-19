@@ -16,9 +16,6 @@ const Album = db.define('album', {
   artists: unique('artists').through('songs'),
   imageUrl: {
     type: DataTypes.VIRTUAL,
-    get: function () {
-      return `/api/albums/${this.id}/image`;
-    }
   }
 }, {
   getterMethods: {
