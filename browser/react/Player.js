@@ -1,8 +1,6 @@
 import React from 'react'
 
-const Footer = ({currentSong, isPlaying, start, pause, selectedAlbum, next, previous}, props) => {
-  console.log("currentSong in footer", currentSong)
-
+const Player = ({currentSong, isPlaying, start, pause, selectedAlbum, next, previous, progress} ) => {
   return (
     <div>
       <footer style={
@@ -41,7 +39,8 @@ const Footer = ({currentSong, isPlaying, start, pause, selectedAlbum, next, prev
         </div>
         <div className="bar">
           <div className="progress">
-            <div className="progress-bar"></div>
+            <div className="progress-bar" style={{width: `${progress}%`}}>
+            </div>
           </div>
         </div>
       </footer>
@@ -49,4 +48,4 @@ const Footer = ({currentSong, isPlaying, start, pause, selectedAlbum, next, prev
   )
 }
 
-export default Footer
+export default Player

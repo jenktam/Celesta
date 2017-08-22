@@ -10439,9 +10439,9 @@ var _Sidebar = __webpack_require__(112);
 
 var _Sidebar2 = _interopRequireDefault(_Sidebar);
 
-var _Footer = __webpack_require__(111);
+var _Player = __webpack_require__(215);
 
-var _Footer2 = _interopRequireDefault(_Footer);
+var _Player2 = _interopRequireDefault(_Player);
 
 var _Albums = __webpack_require__(110);
 
@@ -10482,7 +10482,8 @@ var Main = function (_Component) {
       albums: [],
       selectedAlbum: initialAlbum,
       currentSong: {},
-      isPlaying: false
+      isPlaying: false,
+      progress: 0
     };
 
     _this.selectAlbum = _this.selectAlbum.bind(_this);
@@ -10515,6 +10516,12 @@ var Main = function (_Component) {
 
       audio.addEventListener('ended', function () {
         _this2.next();
+      });
+
+      audio.addEventListener('timeupdate', function () {
+        _this2.setState({
+          progress: 100 * audio.currentTime / audio.duration
+        });
       });
     }
   }, {
@@ -10616,14 +10623,15 @@ var Main = function (_Component) {
             albums: this.state.albums,
             handleClick: this.selectAlbum
           }),
-          _react2.default.createElement(_Footer2.default, {
+          _react2.default.createElement(_Player2.default, {
             start: this.start,
             pause: this.pause,
             previous: this.previous,
             next: this.next,
             currentSong: this.state.currentSong,
             isPlaying: this.state.isPlaying,
-            selectedAlbum: this.state.selectedAlbum
+            selectedAlbum: this.state.selectedAlbum,
+            progress: this.state.progress
           })
         )
       );
@@ -11590,90 +11598,7 @@ var Albums = function Albums(props) {
 exports.default = Albums;
 
 /***/ }),
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(15);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Footer = function Footer(_ref, props) {
-  var currentSong = _ref.currentSong,
-      isPlaying = _ref.isPlaying,
-      start = _ref.start,
-      pause = _ref.pause,
-      selectedAlbum = _ref.selectedAlbum,
-      next = _ref.next,
-      previous = _ref.previous;
-
-  console.log("currentSong in footer", currentSong);
-
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      'footer',
-      { style: !currentSong.id ? { display: 'none' } : null
-      },
-      _react2.default.createElement(
-        'div',
-        { className: 'pull-left' },
-        _react2.default.createElement(
-          'button',
-          { className: 'btn btn-default' },
-          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-backward',
-            onClick: function onClick() {
-              return previous();
-            }
-          })
-        ),
-        _react2.default.createElement(
-          'button',
-          { className: 'btn btn-default',
-            onClick: isPlaying === true && currentSong.id ? function () {
-              return pause();
-            } : function () {
-              return start(currentSong.audioUrl, currentSong);
-            }
-          },
-          _react2.default.createElement('span', { className: isPlaying === true && currentSong.id ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play"
-          })
-        ),
-        _react2.default.createElement(
-          'button',
-          { className: 'btn btn-default' },
-          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-forward',
-            onClick: function onClick() {
-              return next();
-            }
-          })
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'bar' },
-        _react2.default.createElement(
-          'div',
-          { className: 'progress' },
-          _react2.default.createElement('div', { className: 'progress-bar' })
-        )
-      )
-    )
-  );
-};
-
-exports.default = Footer;
-
-/***/ }),
+/* 111 */,
 /* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24475,6 +24400,89 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(15);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Player = function Player(_ref) {
+  var currentSong = _ref.currentSong,
+      isPlaying = _ref.isPlaying,
+      start = _ref.start,
+      pause = _ref.pause,
+      selectedAlbum = _ref.selectedAlbum,
+      next = _ref.next,
+      previous = _ref.previous,
+      progress = _ref.progress;
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'footer',
+      { style: !currentSong.id ? { display: 'none' } : null
+      },
+      _react2.default.createElement(
+        'div',
+        { className: 'pull-left' },
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default' },
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-backward',
+            onClick: function onClick() {
+              return previous();
+            }
+          })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default',
+            onClick: isPlaying === true && currentSong.id ? function () {
+              return pause();
+            } : function () {
+              return start(currentSong.audioUrl, currentSong);
+            }
+          },
+          _react2.default.createElement('span', { className: isPlaying === true && currentSong.id ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play"
+          })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default' },
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-forward',
+            onClick: function onClick() {
+              return next();
+            }
+          })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'bar' },
+        _react2.default.createElement(
+          'div',
+          { className: 'progress' },
+          _react2.default.createElement('div', { className: 'progress-bar', style: { width: progress + '%' } })
+        )
+      )
+    )
+  );
+};
+
+exports.default = Player;
 
 /***/ })
 /******/ ]);

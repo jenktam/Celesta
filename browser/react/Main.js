@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Sidebar from './Sidebar'
-import Footer from './Footer'
+import Player from './Player'
 import Albums from './Albums'
 import SingleAlbum from './SingleAlbum'
 import axios from 'axios'
@@ -20,7 +20,8 @@ export default class Main extends Component{
       albums: [],
       selectedAlbum: initialAlbum,
       currentSong: {},
-      isPlaying: false
+      isPlaying: false,
+      progress: 0
     }
 
     this.selectAlbum = this.selectAlbum.bind(this)
@@ -50,6 +51,12 @@ export default class Main extends Component{
 
     audio.addEventListener('ended', () => {
       this.next()
+    })
+
+    audio.addEventListener('timeupdate', () => {
+      this.setState({
+        progress: 100 * audio.currentTime / audio.duration
+      })
     })
   }
 
@@ -146,7 +153,7 @@ export default class Main extends Component{
                 handleClick={this.selectAlbum}
               />
           }
-        <Footer
+        <Player
           start={this.start}
           pause={this.pause}
           previous={this.previous}
@@ -154,6 +161,7 @@ export default class Main extends Component{
           currentSong={this.state.currentSong}
           isPlaying={this.state.isPlaying}
           selectedAlbum={this.state.selectedAlbum}
+          progress={this.state.progress}
         />
         </div>
       </div>
