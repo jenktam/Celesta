@@ -7,7 +7,8 @@ const initialState = {
   selectedAlbum: initialAlbum,
   currentSong: {},
   isPlaying: false,
-  progress: 0
+  progress: 0,
+  playedSongs: []
 }
 
 export default initialState

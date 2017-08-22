@@ -74,10 +74,13 @@ export default class Main extends Component{
     audio.src = song.audioUrl;
     this.setState({
       currentSong: song,
-      isPlaying: true
+      isPlaying: true,
+      playedSongs: this.state.playedSongs.concat([song]) //concatenate already played songs so these don't replay when clicking shuffle button
     })
     audio.load();
     audio.play();
+
+    this.resetPlayedSongsTracker()
   }
 
   pause() {
@@ -116,15 +119,15 @@ export default class Main extends Component{
 
   shuffle(){
     let currentSongIndex = this.findCurrentSongIndex()
-    console.log("currentSongIndex", currentSongIndex)
-    let nextRandomSongIndex
     let totalSongs = this.state.selectedAlbum.songs.length
+    let nextRandomSongIndex
     let nextSong;
 
     nextRandomSongIndex = Math.floor(Math.random(totalSongs) * totalSongs)
-    console.log("nextRandomSongIndex", nextRandomSongIndex)
     nextSong = this.state.selectedAlbum.songs[nextRandomSongIndex]
-    console.log("nextSong", nextSong)
+
+    //recursively calls shuffle if nextSong chosen is the currentSong playing
+    if(nextSong === this.state.currentSong) this.shuffle()
 
     this.start(nextSong)
   }
@@ -139,6 +142,14 @@ export default class Main extends Component{
     return currentSongIndex
   }
 
+  resetPlayedSongsTracker(){
+     //reset playedSongs
+    if(this.state.selectedAlbum.songs.length === this.state.playedSongs.length) {
+      this.setState({
+        playedSongs: [this.state.currentSong]
+      })
+    }
+  }
 
   render() {
 

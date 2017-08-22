@@ -1558,7 +1558,7 @@ var _prodInvariant = __webpack_require__(3),
     _assign = __webpack_require__(4);
 
 var CallbackQueue = __webpack_require__(63);
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 var ReactFeatureFlags = __webpack_require__(68);
 var ReactReconciler = __webpack_require__(19);
 var Transaction = __webpack_require__(30);
@@ -1847,7 +1847,7 @@ module.exports = ReactCurrentOwner;
 
 var _assign = __webpack_require__(4);
 
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 
 var emptyFunction = __webpack_require__(10);
 var warning = __webpack_require__(2);
@@ -2320,6 +2320,16 @@ module.exports = DOMProperty;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+module.exports = __webpack_require__(20);
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2434,7 +2444,7 @@ module.exports = PooledClass;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2781,16 +2791,6 @@ module.exports = ReactElement;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(20);
-
-
-/***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3107,7 +3107,7 @@ var _assign = __webpack_require__(4);
 var ReactBaseClasses = __webpack_require__(84);
 var ReactChildren = __webpack_require__(205);
 var ReactDOMFactories = __webpack_require__(206);
-var ReactElement = __webpack_require__(16);
+var ReactElement = __webpack_require__(17);
 var ReactPropTypes = __webpack_require__(208);
 var ReactVersion = __webpack_require__(210);
 
@@ -7626,7 +7626,7 @@ var _prodInvariant = __webpack_require__(3);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 
 var invariant = __webpack_require__(1);
 
@@ -10036,7 +10036,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 var ReactCurrentOwner = __webpack_require__(12);
 var ReactComponentTreeHook = __webpack_require__(7);
-var ReactElement = __webpack_require__(16);
+var ReactElement = __webpack_require__(17);
 
 var checkReactTypeSpec = __webpack_require__(211);
 
@@ -10431,7 +10431,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -10545,10 +10545,13 @@ var Main = function (_Component) {
       audio.src = song.audioUrl;
       this.setState({
         currentSong: song,
-        isPlaying: true
+        isPlaying: true,
+        playedSongs: this.state.playedSongs.concat([song]) //concatenate already played songs so these don't replay when clicking shuffle button
       });
       audio.load();
       audio.play();
+
+      this.resetPlayedSongsTracker();
     }
   }, {
     key: 'pause',
@@ -10590,15 +10593,15 @@ var Main = function (_Component) {
     key: 'shuffle',
     value: function shuffle() {
       var currentSongIndex = this.findCurrentSongIndex();
-      console.log("currentSongIndex", currentSongIndex);
-      var nextRandomSongIndex = void 0;
       var totalSongs = this.state.selectedAlbum.songs.length;
+      var nextRandomSongIndex = void 0;
       var nextSong = void 0;
 
       nextRandomSongIndex = Math.floor(Math.random(totalSongs) * totalSongs);
-      console.log("nextRandomSongIndex", nextRandomSongIndex);
       nextSong = this.state.selectedAlbum.songs[nextRandomSongIndex];
-      console.log("nextSong", nextSong);
+
+      //recursively calls shuffle if nextSong chosen is the currentSong playing
+      if (nextSong === this.state.currentSong) this.shuffle();
 
       this.start(nextSong);
     }
@@ -10612,6 +10615,16 @@ var Main = function (_Component) {
         }
       }
       return currentSongIndex;
+    }
+  }, {
+    key: 'resetPlayedSongsTracker',
+    value: function resetPlayedSongsTracker() {
+      //reset playedSongs
+      if (this.state.selectedAlbum.songs.length === this.state.playedSongs.length) {
+        this.setState({
+          playedSongs: [this.state.currentSong]
+        });
+      }
     }
   }, {
     key: 'render',
@@ -11517,7 +11530,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11571,7 +11584,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11620,7 +11633,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11712,7 +11725,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11762,7 +11775,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11872,7 +11885,7 @@ exports.default = SingleAlbum;
 "use strict";
 
 
-var _react = __webpack_require__(17);
+var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -11907,7 +11920,8 @@ var initialState = {
   selectedAlbum: initialAlbum,
   currentSong: {},
   isPlaying: false,
-  progress: 0
+  progress: 0,
+  playedSongs: []
 };
 
 exports.default = initialState;
@@ -15360,7 +15374,7 @@ module.exports = EnterLeaveEventPlugin;
 
 var _assign = __webpack_require__(4);
 
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 
 var getTextContentAccessor = __webpack_require__(78);
 
@@ -20073,7 +20087,7 @@ var _assign = __webpack_require__(4);
 
 var EventListener = __webpack_require__(57);
 var ExecutionEnvironment = __webpack_require__(6);
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactUpdates = __webpack_require__(11);
 
@@ -20990,7 +21004,7 @@ module.exports = ReactPropTypeLocationNames;
 var _assign = __webpack_require__(4);
 
 var CallbackQueue = __webpack_require__(63);
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 var ReactBrowserEventEmitter = __webpack_require__(28);
 var ReactInputSelection = __webpack_require__(70);
 var ReactInstrumentation = __webpack_require__(9);
@@ -21267,7 +21281,7 @@ module.exports = ReactRef;
 
 var _assign = __webpack_require__(4);
 
-var PooledClass = __webpack_require__(15);
+var PooledClass = __webpack_require__(16);
 var Transaction = __webpack_require__(30);
 var ReactInstrumentation = __webpack_require__(9);
 var ReactServerUpdateQueue = __webpack_require__(177);
@@ -23706,7 +23720,7 @@ module.exports = PooledClass;
 
 
 var PooledClass = __webpack_require__(204);
-var ReactElement = __webpack_require__(16);
+var ReactElement = __webpack_require__(17);
 
 var emptyFunction = __webpack_require__(10);
 var traverseAllChildren = __webpack_require__(215);
@@ -23901,7 +23915,7 @@ module.exports = ReactChildren;
 
 
 
-var ReactElement = __webpack_require__(16);
+var ReactElement = __webpack_require__(17);
 
 /**
  * Create a factory that creates HTML tag elements.
@@ -24107,7 +24121,7 @@ module.exports = ReactPropTypeLocationNames;
 
 
 
-var _require = __webpack_require__(16),
+var _require = __webpack_require__(17),
     isValidElement = _require.isValidElement;
 
 var factory = __webpack_require__(60);
@@ -24268,7 +24282,7 @@ module.exports = checkReactTypeSpec;
 var _require = __webpack_require__(84),
     Component = _require.Component;
 
-var _require2 = __webpack_require__(16),
+var _require2 = __webpack_require__(17),
     isValidElement = _require2.isValidElement;
 
 var ReactNoopUpdateQueue = __webpack_require__(87);
@@ -24320,7 +24334,7 @@ module.exports = getNextDebugID;
 
 var _prodInvariant = __webpack_require__(21);
 
-var ReactElement = __webpack_require__(16);
+var ReactElement = __webpack_require__(17);
 
 var invariant = __webpack_require__(1);
 
