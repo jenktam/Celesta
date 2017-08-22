@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Player = ({currentSong, isPlaying, start, pause, selectedAlbum, next, previous, progress} ) => {
+const Player = ({currentSong, isPlaying, start, pause, next, previous, progress, shuffle} ) => {
   return (
     <div>
       <footer style={
@@ -33,6 +33,14 @@ const Player = ({currentSong, isPlaying, start, pause, selectedAlbum, next, prev
             <span className="glyphicon glyphicon-step-forward"
               onClick={
                 () => next()
+              }
+            ></span>
+          </button>
+
+           <button className="btn btn-default">
+            <span className="fa fa-random"
+              onClick={
+                () => shuffle()
               }
             ></span>
           </button>

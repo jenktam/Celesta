@@ -1,28 +1,19 @@
 import React, { Component } from 'react'
-import Sidebar from './Sidebar'
-import Player from './Player'
-import Albums from './Albums'
-import SingleAlbum from './SingleAlbum'
+import Sidebar from '../components/Sidebar'
+import Player from '../components/Player'
+import Albums from '../components/Albums'
+import SingleAlbum from '../components/SingleAlbum'
 import axios from 'axios'
+import initialState from '../initialState'
 
 const logErr = console.error.bind(console)
 const audio = document.createElement('audio');
-
-const initialAlbum = {
-  songs: []
-}
 
 export default class Main extends Component{
   constructor(props) {
     super(props)
 
-    this.state = {
-      albums: [],
-      selectedAlbum: initialAlbum,
-      currentSong: {},
-      isPlaying: false,
-      progress: 0
-    }
+    this.state = initialState
 
     this.selectAlbum = this.selectAlbum.bind(this)
     this.resetSelectedAlbum = this.resetSelectedAlbum.bind(this)
@@ -30,6 +21,7 @@ export default class Main extends Component{
     this.pause = this.pause.bind(this)
     this.previous = this.previous.bind(this)
     this.next = this.next.bind(this)
+    this.shuffle = this.shuffle.bind(this)
   }
 
   componentDidMount() {
@@ -74,7 +66,7 @@ export default class Main extends Component{
 
   resetSelectedAlbum(){
     this.setState({
-      selectedAlbum: initialAlbum
+      selectedAlbum: initialState.selectedAlbum
     })
   }
 
@@ -122,6 +114,21 @@ export default class Main extends Component{
     this.start(nextSong)
   }
 
+  shuffle(){
+    let currentSongIndex = this.findCurrentSongIndex()
+    console.log("currentSongIndex", currentSongIndex)
+    let nextRandomSongIndex
+    let totalSongs = this.state.selectedAlbum.songs.length
+    let nextSong;
+
+    nextRandomSongIndex = Math.floor(Math.random(totalSongs) * totalSongs)
+    console.log("nextRandomSongIndex", nextRandomSongIndex)
+    nextSong = this.state.selectedAlbum.songs[nextRandomSongIndex]
+    console.log("nextSong", nextSong)
+
+    this.start(nextSong)
+  }
+
   findCurrentSongIndex(){
     let currentSongIndex;
     for(let i = 0; i < this.state.selectedAlbum.songs.length; i++) {
@@ -158,6 +165,7 @@ export default class Main extends Component{
           pause={this.pause}
           previous={this.previous}
           next={this.next}
+          shuffle={this.shuffle}
           currentSong={this.state.currentSong}
           isPlaying={this.state.isPlaying}
           selectedAlbum={this.state.selectedAlbum}
