@@ -26,7 +26,7 @@ const SingleAlbum = ({ album, start, pause, currentSong, isPlaying }) => {
               <td onClick={
                 (isPlaying === true && song.id === currentSong.id)
                 ? () => pause()
-                : () => start(song.audioUrl, song)
+                : () => start(song)
               }>
                 <button className="btn btn-default btn-xs">
 

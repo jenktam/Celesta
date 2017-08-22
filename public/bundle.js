@@ -10489,6 +10489,8 @@ var Main = function (_Component) {
     _this.resetSelectedAlbum = _this.resetSelectedAlbum.bind(_this);
     _this.start = _this.start.bind(_this);
     _this.pause = _this.pause.bind(_this);
+    _this.previous = _this.previous.bind(_this);
+    _this.next = _this.next.bind(_this);
     return _this;
   }
 
@@ -10510,6 +10512,10 @@ var Main = function (_Component) {
           albums: backendAlbum
         });
       }).catch(logErr);
+
+      audio.addEventListener('ended', function () {
+        _this2.next();
+      });
     }
   }, {
     key: 'selectAlbum',
@@ -10533,8 +10539,8 @@ var Main = function (_Component) {
     }
   }, {
     key: 'start',
-    value: function start(audioUrl, song) {
-      audio.src = audioUrl;
+    value: function start(song) {
+      audio.src = song.audioUrl;
       this.setState({
         currentSong: song,
         isPlaying: true
@@ -10549,6 +10555,45 @@ var Main = function (_Component) {
         isPlaying: false
       });
       audio.pause();
+    }
+  }, {
+    key: 'previous',
+    value: function previous() {
+      var currentSongIndex = this.findCurrentSongIndex();
+      var previousSong = void 0;
+
+      if (currentSongIndex === 0) {
+        previousSong = this.state.selectedAlbum.songs[this.state.selectedAlbum.songs.length - 1];
+      } else {
+        previousSong = this.state.selectedAlbum.songs[currentSongIndex - 1];
+      }
+
+      this.start(previousSong);
+    }
+  }, {
+    key: 'next',
+    value: function next() {
+      var currentSongIndex = this.findCurrentSongIndex();
+      var nextSong = void 0;
+
+      if (currentSongIndex === this.state.selectedAlbum.songs.length - 1) {
+        nextSong = this.state.selectedAlbum.songs[0];
+      } else {
+        nextSong = this.state.selectedAlbum.songs[currentSongIndex + 1];
+      }
+
+      this.start(nextSong);
+    }
+  }, {
+    key: 'findCurrentSongIndex',
+    value: function findCurrentSongIndex() {
+      var currentSongIndex = void 0;
+      for (var i = 0; i < this.state.selectedAlbum.songs.length; i++) {
+        if (this.state.currentSong.id === this.state.selectedAlbum.songs[i].id) {
+          currentSongIndex = i;
+        }
+      }
+      return currentSongIndex;
     }
   }, {
     key: 'render',
@@ -10572,8 +10617,13 @@ var Main = function (_Component) {
             handleClick: this.selectAlbum
           }),
           _react2.default.createElement(_Footer2.default, {
+            start: this.start,
+            pause: this.pause,
+            previous: this.previous,
+            next: this.next,
             currentSong: this.state.currentSong,
-            isPlaying: this.state.isPlaying
+            isPlaying: this.state.isPlaying,
+            selectedAlbum: this.state.selectedAlbum
           })
         )
       );
@@ -11558,9 +11608,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Footer = function Footer(_ref, props) {
   var currentSong = _ref.currentSong,
-      isPlaying = _ref.isPlaying;
+      isPlaying = _ref.isPlaying,
+      start = _ref.start,
+      pause = _ref.pause,
+      selectedAlbum = _ref.selectedAlbum,
+      next = _ref.next,
+      previous = _ref.previous;
 
-  console.log("currentSong in footer", props);
+  console.log("currentSong in footer", currentSong);
 
   return _react2.default.createElement(
     'div',
@@ -11575,17 +11630,32 @@ var Footer = function Footer(_ref, props) {
         _react2.default.createElement(
           'button',
           { className: 'btn btn-default' },
-          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-backward' })
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-backward',
+            onClick: function onClick() {
+              return previous();
+            }
+          })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-default',
+            onClick: isPlaying === true && currentSong.id ? function () {
+              return pause();
+            } : function () {
+              return start(currentSong.audioUrl, currentSong);
+            }
+          },
+          _react2.default.createElement('span', { className: isPlaying === true && currentSong.id ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play"
+          })
         ),
         _react2.default.createElement(
           'button',
           { className: 'btn btn-default' },
-          _react2.default.createElement('span', { className: 'glyphicon glyphicon-play' })
-        ),
-        _react2.default.createElement(
-          'button',
-          { className: 'btn btn-default' },
-          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-forward' })
+          _react2.default.createElement('span', { className: 'glyphicon glyphicon-step-forward',
+            onClick: function onClick() {
+              return next();
+            }
+          })
         )
       ),
       _react2.default.createElement(
@@ -11733,7 +11803,7 @@ var SingleAlbum = function SingleAlbum(_ref) {
               { onClick: isPlaying === true && song.id === currentSong.id ? function () {
                   return pause();
                 } : function () {
-                  return start(song.audioUrl, song);
+                  return start(song);
                 } },
               _react2.default.createElement(
                 "button",

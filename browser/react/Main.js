@@ -27,6 +27,8 @@ export default class Main extends Component{
     this.resetSelectedAlbum = this.resetSelectedAlbum.bind(this)
     this.start = this.start.bind(this)
     this.pause = this.pause.bind(this)
+    this.previous = this.previous.bind(this)
+    this.next = this.next.bind(this)
   }
 
   componentDidMount() {
@@ -44,7 +46,13 @@ export default class Main extends Component{
       })
     })
     .catch(logErr)
+
+
+    audio.addEventListener('ended', () => {
+      this.next()
+    })
   }
+
 
   selectAlbum(album){
     axios.get(`api/albums/${album.id}`)
@@ -63,8 +71,8 @@ export default class Main extends Component{
     })
   }
 
-  start(audioUrl, song) {
-    audio.src = audioUrl;
+  start(song) {
+    audio.src = song.audioUrl;
     this.setState({
       currentSong: song,
       isPlaying: true
@@ -79,6 +87,44 @@ export default class Main extends Component{
     })
     audio.pause();
   }
+
+  previous(){
+    let currentSongIndex = this.findCurrentSongIndex()
+    let previousSong
+
+    if(currentSongIndex === 0) {
+      previousSong = this.state.selectedAlbum.songs[this.state.selectedAlbum.songs.length - 1]
+    } else {
+      previousSong = this.state.selectedAlbum.songs[currentSongIndex - 1]
+    }
+
+    this.start(previousSong)
+  }
+
+  next(){
+    let currentSongIndex = this.findCurrentSongIndex()
+    let nextSong
+
+
+    if(currentSongIndex === this.state.selectedAlbum.songs.length - 1) {
+      nextSong = this.state.selectedAlbum.songs[0]
+    } else {
+      nextSong = this.state.selectedAlbum.songs[currentSongIndex + 1]
+    }
+
+    this.start(nextSong)
+  }
+
+  findCurrentSongIndex(){
+    let currentSongIndex;
+    for(let i = 0; i < this.state.selectedAlbum.songs.length; i++) {
+      if(this.state.currentSong.id === this.state.selectedAlbum.songs[i].id){
+        currentSongIndex = i
+      }
+    }
+    return currentSongIndex
+  }
+
 
   render() {
 
@@ -101,8 +147,13 @@ export default class Main extends Component{
               />
           }
         <Footer
+          start={this.start}
+          pause={this.pause}
+          previous={this.previous}
+          next={this.next}
           currentSong={this.state.currentSong}
           isPlaying={this.state.isPlaying}
+          selectedAlbum={this.state.selectedAlbum}
         />
         </div>
       </div>
